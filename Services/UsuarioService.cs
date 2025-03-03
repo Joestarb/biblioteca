@@ -46,7 +46,7 @@ namespace biblioteca.Services
         }
         public Usuario GetByUserNameAndPassword(string userName, string password)
         {
-            return _context.Usuarios.SingleOrDefault(u => u.UserName == userName && u.Password == password);
+            return _context.Usuarios.FirstOrDefault(u => u.UserName == userName && u.Password == password);
         }
     }
 }

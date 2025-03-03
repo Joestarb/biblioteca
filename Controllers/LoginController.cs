@@ -20,7 +20,6 @@ namespace biblioteca.Controllers
             _usuarioService = usuarioService;
             _configuration = configuration;
         }
-
         [HttpPost("login")]
         public IActionResult Login([FromBody] UsuarioLoginModel loginModel)
         {
@@ -30,8 +29,14 @@ namespace biblioteca.Controllers
                 return Unauthorized();
             }
 
+            var key = _configuration["Jwt:Key"];
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key), "JWT key cannot be null or empty.");
+            }
+
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var keyBytes = Encoding.ASCII.GetBytes(key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -39,15 +44,25 @@ namespace biblioteca.Controllers
                     new Claim(ClaimTypes.Name, usuario.PkUsuario.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new { Token = tokenString });
+            var response = new AuthResponseModel
+            {
+                Token = tokenString,
+                Usuario = usuario
+            };
+
+            return Ok(response);
         }
     }
-
+    public class AuthResponseModel
+    {
+        public string Token { get; set; }
+        public Usuario Usuario { get; set; }
+    }
     public class UsuarioLoginModel
     {
         public string UserName { get; set; }

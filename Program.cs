@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Configurar JWT
-var key = Encoding.ASCII.GetBytes("your_secret_key_here");
+var key = Encoding.ASCII.GetBytes("your_longer_secret_key_here_which_is_at_least_32_bytes_long");
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
