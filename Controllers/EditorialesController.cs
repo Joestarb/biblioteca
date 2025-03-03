@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using biblioteca.Models;
+using biblioteca.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace biblioteca.Controllers
 {
@@ -9,38 +9,34 @@ namespace biblioteca.Controllers
     [ApiController]
     public class EditorialesController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly IEditorialService _service;
 
-        public EditorialesController(BibliotecaContext context)
+        public EditorialesController(IEditorialService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Editorial>> GetEditoriales()
         {
-            return _context.Editoriales.ToList();
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Editorial> GetEditorial(int id)
         {
-            var editorial = _context.Editoriales.Find(id);
-
+            var editorial = _service.GetById(id);
             if (editorial == null)
             {
                 return NotFound();
             }
-
-            return editorial;
+            return Ok(editorial);
         }
 
         [HttpPost]
         public ActionResult<Editorial> PostEditorial(Editorial editorial)
         {
-            _context.Editoriales.Add(editorial);
-            _context.SaveChanges();
-
+            _service.Add(editorial);
             return CreatedAtAction(nameof(GetEditorial), new { id = editorial.PkEditorial }, editorial);
         }
 
@@ -51,25 +47,14 @@ namespace biblioteca.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(editorial).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-
+            _service.Update(editorial);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteEditorial(int id)
         {
-            var editorial = _context.Editoriales.Find(id);
-            if (editorial == null)
-            {
-                return NotFound();
-            }
-
-            _context.Editoriales.Remove(editorial);
-            _context.SaveChanges();
-
+            _service.Delete(id);
             return NoContent();
         }
     }

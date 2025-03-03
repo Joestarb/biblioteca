@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using biblioteca.Models;
+using biblioteca.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace biblioteca.Controllers
 {
@@ -9,38 +9,34 @@ namespace biblioteca.Controllers
     [ApiController]
     public class GenerosController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly IGeneroService _service;
 
-        public GenerosController(BibliotecaContext context)
+        public GenerosController(IGeneroService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Genero>> GetGeneros()
         {
-            return _context.Generos.ToList();
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Genero> GetGenero(int id)
         {
-            var genero = _context.Generos.Find(id);
-
+            var genero = _service.GetById(id);
             if (genero == null)
             {
                 return NotFound();
             }
-
-            return genero;
+            return Ok(genero);
         }
 
         [HttpPost]
         public ActionResult<Genero> PostGenero(Genero genero)
         {
-            _context.Generos.Add(genero);
-            _context.SaveChanges();
-
+            _service.Add(genero);
             return CreatedAtAction(nameof(GetGenero), new { id = genero.PkGenero }, genero);
         }
 
@@ -51,25 +47,14 @@ namespace biblioteca.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(genero).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-
+            _service.Update(genero);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteGenero(int id)
         {
-            var genero = _context.Generos.Find(id);
-            if (genero == null)
-            {
-                return NotFound();
-            }
-
-            _context.Generos.Remove(genero);
-            _context.SaveChanges();
-
+            _service.Delete(id);
             return NoContent();
         }
     }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using biblioteca.Models;
+using biblioteca.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace biblioteca.Controllers
 {
@@ -9,38 +9,34 @@ namespace biblioteca.Controllers
     [ApiController]
     public class LibrosController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly ILibroService _service;
 
-        public LibrosController(BibliotecaContext context)
+        public LibrosController(ILibroService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Libro>> GetLibros()
         {
-            return _context.Libros.ToList();
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Libro> GetLibro(int id)
         {
-            var libro = _context.Libros.Find(id);
-
+            var libro = _service.GetById(id);
             if (libro == null)
             {
                 return NotFound();
             }
-
-            return libro;
+            return Ok(libro);
         }
 
         [HttpPost]
         public ActionResult<Libro> PostLibro(Libro libro)
         {
-            _context.Libros.Add(libro);
-            _context.SaveChanges();
-
+            _service.Add(libro);
             return CreatedAtAction(nameof(GetLibro), new { id = libro.PkLibro }, libro);
         }
 
@@ -51,25 +47,14 @@ namespace biblioteca.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(libro).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-
+            _service.Update(libro);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteLibro(int id)
         {
-            var libro = _context.Libros.Find(id);
-            if (libro == null)
-            {
-                return NotFound();
-            }
-
-            _context.Libros.Remove(libro);
-            _context.SaveChanges();
-
+            _service.Delete(id);
             return NoContent();
         }
     }

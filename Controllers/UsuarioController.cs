@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using biblioteca.Models;
+using biblioteca.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace biblioteca.Controllers
 {
@@ -9,38 +9,34 @@ namespace biblioteca.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly IUsuarioService _service;
 
-        public UsuariosController(BibliotecaContext context)
+        public UsuariosController(IUsuarioService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Usuario>> GetUsuarios()
         {
-            return _context.Usuarios.ToList();
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Usuario> GetUsuario(int id)
         {
-            var usuario = _context.Usuarios.Find(id);
-
+            var usuario = _service.GetById(id);
             if (usuario == null)
             {
                 return NotFound();
             }
-
-            return usuario;
+            return Ok(usuario);
         }
 
         [HttpPost]
         public ActionResult<Usuario> PostUsuario(Usuario usuario)
         {
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
-
+            _service.Add(usuario);
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.PkUsuario }, usuario);
         }
 
@@ -51,25 +47,14 @@ namespace biblioteca.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(usuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-
+            _service.Update(usuario);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteUsuario(int id)
         {
-            var usuario = _context.Usuarios.Find(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            _context.Usuarios.Remove(usuario);
-            _context.SaveChanges();
-
+            _service.Delete(id);
             return NoContent();
         }
     }

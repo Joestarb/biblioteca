@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using biblioteca.Models;
+using biblioteca.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace biblioteca.Controllers
 {
@@ -9,38 +9,34 @@ namespace biblioteca.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly IRolService _service;
 
-        public RolesController(BibliotecaContext context)
+        public RolesController(IRolService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Rol>> GetRoles()
         {
-            return _context.Roles.ToList();
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Rol> GetRol(int id)
         {
-            var rol = _context.Roles.Find(id);
-
+            var rol = _service.GetById(id);
             if (rol == null)
             {
                 return NotFound();
             }
-
-            return rol;
+            return Ok(rol);
         }
 
         [HttpPost]
         public ActionResult<Rol> PostRol(Rol rol)
         {
-            _context.Roles.Add(rol);
-            _context.SaveChanges();
-
+            _service.Add(rol);
             return CreatedAtAction(nameof(GetRol), new { id = rol.PkRol }, rol);
         }
 
@@ -51,25 +47,14 @@ namespace biblioteca.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(rol).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-
+            _service.Update(rol);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteRol(int id)
         {
-            var rol = _context.Roles.Find(id);
-            if (rol == null)
-            {
-                return NotFound();
-            }
-
-            _context.Roles.Remove(rol);
-            _context.SaveChanges();
-
+            _service.Delete(id);
             return NoContent();
         }
     }

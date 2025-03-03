@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using biblioteca.Models;
+using biblioteca.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace biblioteca.Controllers
 {
@@ -9,38 +9,34 @@ namespace biblioteca.Controllers
     [ApiController]
     public class AutoresController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly IAutorService _service;
 
-        public AutoresController(BibliotecaContext context)
+        public AutoresController(IAutorService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Autor>> GetAutores()
         {
-            return _context.Autores.ToList();
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Autor> GetAutor(int id)
         {
-            var autor = _context.Autores.Find(id);
-
+            var autor = _service.GetById(id);
             if (autor == null)
             {
                 return NotFound();
             }
-
-            return autor;
+            return Ok(autor);
         }
 
         [HttpPost]
         public ActionResult<Autor> PostAutor(Autor autor)
         {
-            _context.Autores.Add(autor);
-            _context.SaveChanges();
-
+            _service.Add(autor);
             return CreatedAtAction(nameof(GetAutor), new { id = autor.PkAutor }, autor);
         }
 
@@ -51,25 +47,14 @@ namespace biblioteca.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(autor).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-
+            _service.Update(autor);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteAutor(int id)
         {
-            var autor = _context.Autores.Find(id);
-            if (autor == null)
-            {
-                return NotFound();
-            }
-
-            _context.Autores.Remove(autor);
-            _context.SaveChanges();
-
+            _service.Delete(id);
             return NoContent();
         }
     }
