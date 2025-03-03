@@ -22,13 +22,13 @@ namespace biblioteca.Services
         {
             return _context.Usuarios.Find(id);
         }
-
+        
         public void Add(Usuario usuario)
         {
+            usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();
         }
-
         public void Update(Usuario usuario)
         {
             _context.Entry(usuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -44,9 +44,15 @@ namespace biblioteca.Services
                 _context.SaveChanges();
             }
         }
+        
         public Usuario GetByUserNameAndPassword(string userName, string password)
         {
-            return _context.Usuarios.FirstOrDefault(u => u.UserName == userName && u.Password == password);
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.UserName == userName);
+            if (usuario != null && BCrypt.Net.BCrypt.Verify(password, usuario.Password))
+            {
+                return usuario;
+            }
+            return null;
         }
     }
 }

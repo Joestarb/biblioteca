@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "pzPX+nfAF6LigvhW7CVq5hZTIsycEp9ORL9bRQE30cW5BlV3JW+ZXwf/VtHk/oAp+XxsCFApIQJzY2iIAD4VAw==",
+  "dgSpecHash": "A8lLzOxUxqRMHDtbnbNFCkgnQfOFSlSQTNtSbU/iZmhKdg3A28SYunggPiNnnvXdoIoC8O+9DMgTV7EJEIFx7Q==",
   "success": true,
   "projectFilePath": "/home/arbey/Documentos/proyectos/cs/biblioteca/biblioteca.csproj",
   "expectedPackageFiles": [
     "/home/arbey/.nuget/packages/azure.core/1.38.0/azure.core.1.38.0.nupkg.sha512",
     "/home/arbey/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",
+    "/home/arbey/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/arbey/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/arbey/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.0/microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
     "/home/arbey/.nuget/packages/microsoft.aspnetcore.openapi/8.0.12/microsoft.aspnetcore.openapi.8.0.12.nupkg.sha512",
