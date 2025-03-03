@@ -10,5 +10,7 @@ namespace biblioteca.Services
         void Add(Usuario usuario);
         void Update(Usuario usuario);
         void Delete(int id);
+        Usuario GetByUserNameAndPassword(string userName, string password);
+
     }
 }

@@ -44,5 +44,9 @@ namespace biblioteca.Services
                 _context.SaveChanges();
             }
         }
+        public Usuario GetByUserNameAndPassword(string userName, string password)
+        {
+            return _context.Usuarios.SingleOrDefault(u => u.UserName == userName && u.Password == password);
+        }
     }
 }

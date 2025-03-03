@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace biblioteca.Models
 {
     public class Usuario
@@ -7,7 +9,8 @@ namespace biblioteca.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public int FkRol { get; set; }
-        public Rol Rol { get; set; }
+        [JsonIgnore]
+        public Rol? Rol { get; set; }
     }
 
     public class Rol
@@ -41,9 +44,12 @@ namespace biblioteca.Models
         public string Isbn13 { get; set; }
         public string WorldId { get; set; }
         public string Idioma { get; set; }
-        public Autor Autor { get; set; }
-        public Editorial Editorial { get; set; }
-        public Genero Genero { get; set; }
+        [JsonIgnore]
+        public Autor? Autor { get; set; }
+        [JsonIgnore]
+        public Editorial? Editorial { get; set; }
+        [JsonIgnore]
+        public Genero? Genero { get; set; }
     }
 
     public class Editorial
