@@ -57,5 +57,11 @@ namespace biblioteca.Controllers
             _service.Delete(id);
             return NoContent();
         }
+        [HttpGet("lastfive")] // Nuevo endpoint
+        public ActionResult<IEnumerable<Libro>> GetLastFiveLibros()
+        {
+            var libros = _service.GetLastFive();
+            return Ok(libros);
+        }
     }
 }

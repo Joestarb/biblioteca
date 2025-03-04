@@ -170,3 +170,4 @@
 /home/arbey/Documentos/proyectos/cs/biblioteca/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
 /home/arbey/Documentos/proyectos/cs/biblioteca/bin/Debug/net8.0/Microsoft.Bcl.Memory.dll
 /home/arbey/Documentos/proyectos/cs/biblioteca/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/home/arbey/Documentos/proyectos/cs/biblioteca/obj/Debug/net8.0/biblioteca.sourcelink.json

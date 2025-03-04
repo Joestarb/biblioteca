@@ -44,5 +44,9 @@ namespace biblioteca.Services
                 _context.SaveChanges();
             }
         }
+          public IEnumerable<Libro> GetLastFive() // Implementación del nuevo método
+        {
+            return _context.Libros.OrderByDescending(l => l.PkLibro).Take(5).ToList();
+        }
     }
 }

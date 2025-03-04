@@ -10,5 +10,7 @@ namespace biblioteca.Services
         void Add(Libro libro);
         void Update(Libro libro);
         void Delete(int id);
+                IEnumerable<Libro> GetLastFive(); // Nuevo método
+
     }
 }
